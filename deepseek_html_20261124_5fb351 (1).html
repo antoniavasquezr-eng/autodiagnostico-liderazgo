@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>¿Cómo lidero hoy? · Autodiagnóstico de liderazgo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7EDCF; --surface:#FFF8E6; --ink:#2E2D2A; --muted:#6B6A5E;
+  --lila:#C8B5DB; --lila-ink:#6E4F99; --oliva:#7B7F68; --amarillo:#F2BB3F;
+  --line:#E4D7AE; --focus:#6E4F99;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#22211D; --surface:#2D2B26; --ink:#F3EBD3; --muted:#BDB59C;
+    --lila:#5C4A78; --lila-ink:#CDB8EA; --oliva:#A4A88F; --amarillo:#F2BB3F;
+    --line:#45423A; --focus:#CDB8EA; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#22211D; --surface:#2D2B26; --ink:#F3EBD3; --muted:#BDB59C;
+  --lila:#5C4A78; --lila-ink:#CDB8EA; --oliva:#A4A88F; --amarillo:#F2BB3F;
+  --line:#45423A; --focus:#CDB8EA; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: inherit }
+html { scroll-padding-top: env(safe-area-inset-top, 0px) }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Work Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+}
+
+main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 1.25rem 3rem }
+
+h1 {
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  font-optical-sizing: auto;
+  font-size: clamp(2rem, 6.5vw, 2.75rem);
+  line-height: 1.05;
+  font-weight: 600;
+  margin: .35rem 0 1rem;
+  letter-spacing: -.015em;
+}
+h2 {
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  font-optical-sizing: auto;
+  font-size: 1.45rem;
+  line-height: 1.2;
+  font-weight: 600;
+  margin: 0 0 .75rem;
+  letter-spacing: -.01em;
+}
+p { margin: 0 0 1rem; max-width: 36em }
+
+.tag {
+  display: inline-block;
+  background: var(--lila);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: .8rem;
+  padding: .35rem .85rem;
+  border-radius: 999px;
+  letter-spacing: .02em;
+}
+.muted { color: var(--muted) }
+
+.panel {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+button { font: inherit; cursor: pointer }
+
+.btn {
+  background: var(--ink);
+  color: var(--bg);
+  border: 0;
+  border-radius: 999px;
+  padding: .85rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: transform .08s;
+}
+.btn:active { transform: scale(.98) }
+.btn.secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+}
+.btn:disabled { opacity: .35; cursor: not-allowed }
+button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px }
+
+.row { display: flex; gap: .75rem; flex-wrap: wrap; align-items: center }
+
+/* camino punteado de progreso */
+.trail { margin: 1rem 0 .25rem; height: 28px }
+.trail svg { width: 100%; height: 28px; overflow: visible }
+.count { font-size: .9rem; color: var(--muted); font-weight: 500 }
+
+.dim {
+  font-weight: 600;
+  color: var(--lila-ink);
+  font-size: .95rem;
+  margin-bottom: .4rem;
+}
+.stmt {
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  font-optical-sizing: auto;
+  font-size: 1.35rem;
+  line-height: 1.35;
+  font-weight: 500;
+  margin: 0 0 1.25rem;
+  letter-spacing: -.005em;
+}
+
+.scale { display: grid; gap: .55rem }
+.opt {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  text-align: left;
+  width: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: .8rem 1rem;
+  font-weight: 500;
+  transition: border-color .15s, background .15s;
+}
+.opt .dot {
+  flex: none;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  border: 2px solid var(--oliva);
+  display: grid;
+  place-items: center;
+}
+.opt[aria-pressed="true"] { border-color: var(--lila-ink); background: var(--lila) }
+.opt[aria-pressed="true"] .dot { border-color: var(--ink); background: var(--amarillo) }
+
+.nav { margin-top: 1.25rem; justify-content: space-between }
+.link {
+  background: none;
+  border: 0;
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: underline;
+  padding: .5rem 0;
+}
+
+.radar-wrap { display: flex; justify-content: center; margin: .5rem 0 1rem }
+.radar-wrap svg { width: 100%; max-width: 30rem; height: auto }
+.radar-label {
+  font-family: "Work Sans", system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--ink);
+}
+
+.legend { display: grid; gap: .5rem; margin: 0 0 1.25rem; padding: 0; list-style: none }
+.legend li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--line);
+  padding: .45rem 0;
+  font-weight: 500;
+}
+.legend .v { font-variant-numeric: tabular-nums; color: var(--muted) }
+
+.callout {
+  border-left: 6px solid var(--amarillo);
+  padding: .25rem 0 .25rem 1rem;
+  margin: 1rem 0 1.25rem;
+}
+.callout.lila { border-color: var(--lila-ink) }
+.callout strong {
+  display: block;
+  margin-bottom: .2rem;
+  font-family: "Fraunces", Georgia, serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.toast { font-size: .9rem; color: var(--muted); min-height: 1.4em }
+
+[hidden] { display: none !important }
+
+@media (prefers-reduced-motion: no-preference){
+  .trail circle { transition: cx .35s ease, r .35s ease }
+  .poly { transition: opacity .6s ease }
+}
+</style>
+</head>
+<body>
+<main>
+
+  <section id="inicio">
+    <span class="tag">Unidad 1 · Activación</span>
+    <h1>¿Cómo lidero hoy?</h1>
+    <p>Vas a leer 15 afirmaciones sobre prácticas de liderazgo pedagógico. Para cada una, marca con qué frecuencia la hiciste en las últimas cuatro semanas.</p>
+    <p class="muted">Responde por lo que hiciste, no por lo que te gustaría hacer. No hay respuestas correctas y nadie más ve tu resultado. Al final verás tu radar y lo volverás a mirar en la Unidad 8.</p>
+    <div class="row" style="margin-top:1.5rem">
+      <button class="btn" id="empezar">Empezar el autodiagnóstico</button>
+      <button class="btn secondary" id="retomar" hidden>Ver mi último resultado</button>
+    </div>
+    <p class="muted" style="margin-top:1rem;font-size:.9rem">Toma unos 10 minutos.</p>
+  </section>
+
+  <section id="cuestionario" hidden>
+    <div class="trail" aria-hidden="true"><svg id="trail-svg" viewBox="0 0 300 28" preserveAspectRatio="none"></svg></div>
+    <div class="count" id="count" aria-live="polite"></div>
+    <div class="panel">
+      <div class="dim" id="dim"></div>
+      <p class="stmt" id="stmt"></p>
+      <div class="scale" id="scale" role="group" aria-labelledby="stmt"></div>
+      <div class="row nav">
+        <button class="link" id="back">Anterior</button>
+        <button class="btn" id="next" disabled>Siguiente</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="resultado" hidden>
+    <span class="tag">Tu perfil de liderazgo</span>
+    <h1>Así lideras hoy</h1>
+    <p class="muted">Promedio de cada dimensión del MBDLE, de 1 (casi nunca) a 5 (casi siempre).</p>
+    <div class="radar-wrap">
+      <svg id="radar" viewBox="-70 0 540 370" role="img" aria-label="Radar de liderazgo por dimensión"></svg>
+    </div>
+    <ul class="legend" id="legend"></ul>
+    <div class="callout" id="strong"></div>
+    <div class="callout lila" id="weak"></div>
+    <div class="panel">
+      <h2>Antes de seguir</h2>
+      <p>Tu dimensión más baja no es necesariamente tu prioridad. En la lección 1.4 vas a aprender a leer este perfil y a escribir dos propósitos de mejora.</p>
+      <p class="muted" style="margin-bottom:0">Guarda una captura de pantalla de tu radar o copia tu resultado: lo vas a usar en tu Evidencia 1.</p>
+    </div>
+    <div class="row" style="margin-top:1.25rem">
+      <button class="btn" id="copiar">Copiar mi resultado</button>
+      <button class="btn secondary" id="rehacer">Responder de nuevo</button>
+    </div>
+    <p class="toast" id="toast" aria-live="polite"></p>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var DIMENSIONES = [
+    {
+      nombre: "Visión estratégica compartida",
+      corto: ["Visión", "compartida"],
+      tip: "Una idea para empezar: dedica 15 minutos del próximo consejo o microcentro a una sola pregunta, «¿qué queremos que aprendan nuestros estudiantes este año?», y deja la respuesta escrita a la vista.",
+      items: [
+        "Converso con mis colegas sobre qué queremos lograr con los estudiantes este año.",
+        "Tomo las decisiones importantes mirando el proyecto educativo de la escuela.",
+        "Las familias y la comunidad saben hacia dónde quiere ir la escuela."
+      ]
+    },
+    {
+      nombre: "Capacidades profesionales",
+      corto: ["Capacidades", "profesionales"],
+      tip: "Una idea para empezar: invita a un colega a observar 20 minutos de tu clase con una pregunta concreta y conversen 15 minutos después.",
+      items: [
+        "Observo clases de colegas, o pido que observen las mías, para dar o recibir retroalimentación.",
+        "Busco espacios para aprender de la práctica: microcentro, pasantías o lecturas compartidas.",
+        "Reconozco en voz alta lo que mis colegas hacen bien."
+      ]
+    },
+    {
+      nombre: "Enseñanza y aprendizaje",
+      corto: ["Enseñanza y", "aprendizaje"],
+      tip: "Una idea para empezar: elige un aprendizaje clave (por ejemplo, lectura en primer ciclo) y revisa su avance una vez al mes con tus colegas.",
+      items: [
+        "Reviso los aprendizajes de los estudiantes y los uso para tomar decisiones.",
+        "Protejo el tiempo de clases frente a interrupciones administrativas.",
+        "Analizo con otros docentes trabajos o resultados de estudiantes."
+      ]
+    },
+    {
+      nombre: "Convivencia y participación",
+      corto: ["Convivencia y", "participación"],
+      tip: "Una idea para empezar: invita a las familias a una clase abierta donde participen de una actividad de aprendizaje, no solo de una reunión.",
+      items: [
+        "Las familias participan en actividades de aprendizaje, no solo en reuniones informativas.",
+        "Ante un conflicto, priorizo el diálogo y la reparación antes que la sanción.",
+        "Los estudiantes tienen espacios para opinar sobre la vida de la escuela."
+      ]
+    },
+    {
+      nombre: "Gestión del establecimiento",
+      corto: ["Gestión del", "establecimiento"],
+      tip: "Una idea para empezar: protege un bloque fijo de la semana para lo pedagógico y anota qué tareas podrías compartir o delegar.",
+      items: [
+        "Organizo el tiempo y los recursos pensando primero en lo pedagógico.",
+        "Comparto o delego tareas en vez de hacerlo todo yo.",
+        "Me vinculo con actores del territorio (sostenedor, posta, municipio, organizaciones) para conseguir apoyos."
+      ]
+    }
+  ];
+
+  var PREGUNTAS = DIMENSIONES.flatMap(function (dim, idx) {
+    return dim.items.map(function (texto) {
+      return { dimIdx: idx, texto: texto };
+    });
+  });
+
+  var ESCALA = ["Casi nunca", "Pocas veces", "A veces", "Frecuentemente", "Casi siempre"];
+  var ALMACEN = "m3u1-radar-v3";
+
+  var respuestas = new Array(PREGUNTAS.length).fill(null);
+  var actual = 0;
+  var ultimoPuntaje = null;
+
+  function nodo(id) { return document.getElementById(id); }
+  function formato(n) { return n.toFixed(1).replace(".", ","); }
+
+  function mostrar(seccion) {
+    ["inicio", "cuestionario", "resultado"].forEach(function (id) {
+      nodo(id).hidden = id !== seccion;
+    });
+    window.scrollTo({ top: 0 });
+  }
+
+  function guardar() {
+    try {
+      localStorage.setItem(ALMACEN, JSON.stringify({
+        respuestas: respuestas.slice(),
+        fecha: new Date().toISOString()
+      }));
+    } catch (e) { /* sin almacenamiento */ }
+  }
+
+  function cargar() {
+    try {
+      var raw = localStorage.getItem(ALMACEN);
+      if (!raw) return null;
+      var datos = JSON.parse(raw);
+      if (datos && Array.isArray(datos.respuestas) &&
+          datos.respuestas.length === PREGUNTAS.length &&
+          datos.respuestas.every(function (r) { return typeof r === "number" && r >= 1 && r <= 5; })) {
+        return datos.respuestas;
+      }
+    } catch (e) { /* corrupto */ }
+    return null;
+  }
+
+  function dibujarCamino() {
+    var total = PREGUNTAS.length;
+    var paso = 288 / (total - 1);
+    var puntos = [];
+    for (var k = 0; k < total; k++) {
+      puntos.push([
+        6 + k * paso,
+        14 - Math.sin((k / (total - 1)) * Math.PI * 2) * 6
+      ]);
+    }
+    var trazo = puntos.map(function (p, idx) {
+      return (idx === 0 ? "M" : "L") + p[0].toFixed(2) + " " + p[1].toFixed(2);
+    }).join(" ");
+    var html = '<path d="' + trazo + '" fill="none" stroke="var(--oliva)" stroke-width="2" stroke-dasharray="5 5" stroke-linejoin="round"/>';
+    puntos.forEach(function (p, k) {
+      var relleno = k === actual ? "var(--amarillo)" : (respuestas[k] !== null ? "var(--lila-ink)" : "var(--surface)");
+      var radio = k === actual ? 6 : 4;
+      html += '<circle cx="' + p[0].toFixed(2) + '" cy="' + p[1].toFixed(2) +
+              '" r="' + radio + '" fill="' + relleno +
+              '" stroke="var(--oliva)" stroke-width="1.5"/>';
+    });
+    nodo("trail-svg").innerHTML = html;
+  }
+
+  function pintarPregunta() {
+    var p = PREGUNTAS[actual];
+    nodo("count").textContent = "Afirmación " + (actual + 1) + " de " + PREGUNTAS.length;
+    nodo("dim").textContent = DIMENSIONES[p.dimIdx].nombre;
+    nodo("stmt").textContent = p.texto;
+
+    nodo("scale").innerHTML = ESCALA.map(function (texto, idx) {
+      var valor = idx + 1;
+      var activo = respuestas[actual] === valor ? "true" : "false";
+      return '<button type="button" class="opt" data-valor="' + valor + '" aria-pressed="' + activo + '">' +
+               '<span class="dot" aria-hidden="true"></span><span>' + texto + '</span>' +
+             '</button>';
+    }).join("");
+
+    nodo("next").disabled = respuestas[actual] === null;
+    nodo("next").textContent = actual === PREGUNTAS.length - 1 ? "Ver mi radar" : "Siguiente";
+    nodo("back").style.visibility = actual === 0 ? "hidden" : "visible";
+
+    dibujarCamino();
+  }
+
+  function calcularPuntajes() {
+    return DIMENSIONES.map(function (_, idx) {
+      var valores = [];
+      PREGUNTAS.forEach(function (p, k) {
+        if (p.dimIdx === idx) valores.push(respuestas[k]);
+      });
+      return valores.reduce(function (a, b) { return a + b; }, 0) / valores.length;
+    });
+  }
+
+  function dibujarRadar(puntajes) {
+    var cx = 200, cy = 190, radio = 120, n = DIMENSIONES.length;
+    var angulo = function (k) { return (Math.PI * 2 * k / n) - Math.PI / 2; };
+    var coord = function (k, r) {
+      return [cx + Math.cos(angulo(k)) * r, cy + Math.sin(angulo(k)) * r];
+    };
+
+    var partes = [];
+
+    for (var nivel = 1; nivel <= 5; nivel++) {
+      var vertices = DIMENSIONES.map(function (_, k) {
+        var c = coord(k, radio * nivel / 5);
+        return c[0].toFixed(1) + "," + c[1].toFixed(1);
+      }).join(" ");
+      partes.push('<polygon points="' + vertices + '" fill="none" stroke="var(--line)" stroke-width="' + (nivel === 5 ? 2 : 1) + '"/>');
+    }
+
+    DIMENSIONES.forEach(function (_, k) {
+      var c = coord(k, radio);
+      partes.push('<line x1="' + cx + '" y1="' + cy + '" x2="' + c[0].toFixed(1) + '" y2="' + c[1].toFixed(1) + '" stroke="var(--line)"/>');
+    });
+
+    var poligono = puntajes.map(function (v, k) {
+      var c = coord(k, radio * v / 5);
+      return c[0].toFixed(1) + "," + c[1].toFixed(1);
+    }).join(" ");
+    partes.push('<polygon class="poly" points="' + poligono + '" fill="var(--lila)" fill-opacity=".75" stroke="var(--lila-ink)" stroke-width="2.5" stroke-linejoin="round"/>');
+
+    puntajes.forEach(function (v, k) {
+      var c = coord(k, radio * v / 5);
+      partes.push('<circle cx="' + c[0].toFixed(1) + '" cy="' + c[1].toFixed(1) + '" r="6" fill="var(--amarillo)" stroke="var(--ink)" stroke-width="1.5"/>');
+    });
+
+    DIMENSIONES.forEach(function (d, k) {
+      var c = coord(k, radio + 30);
+      var anclaje = Math.abs(c[0] - cx) < 10 ? "middle" : (c[0] > cx ? "start" : "end");
+      var ajuste = k === 0 ? -14 : 0;
+      partes.push(
+        '<text class="radar-label" x="' + c[0].toFixed(1) + '" y="' + (c[1] + ajuste).toFixed(1) + '" text-anchor="' + anclaje + '">' +
+          '<tspan x="' + c[0].toFixed(1) + '">' + d.corto[0] + '</tspan>' +
+          '<tspan x="' + c[0].toFixed(1) + '" dy="16">' + d.corto[1] + '</tspan>' +
+        '</text>'
+      );
+    });
+
+    nodo("radar").innerHTML = partes.join("");
+  }
+
+  function pintarLeyenda(puntajes) {
+    nodo("legend").innerHTML = DIMENSIONES.map(function (d, k) {
+      return '<li><span>' + d.nombre + '</span><span class="v">' + formato(puntajes[k]) + ' de 5</span></li>';
+    }).join("");
+  }
+
+  function pintarInterpretacion(puntajes) {
+    var maximo = Math.max.apply(null, puntajes);
+    var minimo = Math.min.apply(null, puntajes);
+    var idxMax = puntajes.indexOf(maximo);
+    var idxMin = puntajes.lastIndexOf(minimo);
+
+    if (maximo - minimo < 0.4) {
+      var medio = (maximo + minimo) / 2;
+      nodo("strong").innerHTML = '<strong>Tu perfil es parejo</strong>Tus cinco dimensiones están en niveles parecidos (alrededor de ' + formato(medio) + '). Eso hace aún más importante elegir con criterio dónde poner el foco.';
+      nodo("weak").innerHTML = '<strong>Para pensar</strong>¿Cuál de estas dimensiones, si la fortaleces, mejoraría más lo que aprenden tus estudiantes?';
+    } else {
+      nodo("strong").innerHTML = '<strong>Tu dimensión más fuerte: ' + DIMENSIONES[idxMax].nombre + '</strong>Es una base para apoyarte. ¿Qué situación reciente de tu escuela lo muestra?';
+      nodo("weak").innerHTML = '<strong>Tu dimensión con más espacio para crecer: ' + DIMENSIONES[idxMin].nombre + '</strong>' + DIMENSIONES[idxMin].tip;
+    }
+  }
+
+  function verResultado(lista) {
+    if (lista) respuestas = lista.slice();
+    var puntajes = calcularPuntajes();
+    dibujarRadar(puntajes);
+    pintarLeyenda(puntajes);
+    pintarInterpretacion(puntajes);
+    ultimoPuntaje = puntajes;
+    mostrar("resultado");
+  }
+
+  function reiniciar() {
+    respuestas = new Array(PREGUNTAS.length).fill(null);
+    actual = 0;
+    ultimoPuntaje = null;
+    pintarPregunta();
+    mostrar("cuestionario");
+  }
+
+  nodo("empezar").addEventListener("click", reiniciar);
+  nodo("rehacer").addEventListener("click", reiniciar);
+
+  nodo("scale").addEventListener("click", function (ev) {
+    var btn = ev.target.closest("button.opt");
+    if (!btn) return;
+    respuestas[actual] = Number(btn.dataset.valor);
+    var hermanos = nodo("scale").querySelectorAll(".opt");
+    for (var j = 0; j < hermanos.length; j++) {
+      hermanos[j].setAttribute("aria-pressed", "false");
+    }
+    btn.setAttribute("aria-pressed", "true");
+    nodo("next").disabled = false;
+    dibujarCamino();
+  });
+
+  nodo("next").addEventListener("click", function () {
+    if (respuestas[actual] === null) return;
+    if (actual < PREGUNTAS.length - 1) {
+      actual++;
+      pintarPregunta();
+    } else {
+      guardar();
+      verResultado();
+    }
+  });
+
+  nodo("back").addEventListener("click", function () {
+    if (actual > 0) {
+      actual--;
+      pintarPregunta();
+    }
+  });
+
+  nodo("retomar").addEventListener("click", function () {
+    var guardadas = cargar();
+    if (guardadas) verResultado(guardadas);
+  });
+
+  nodo("copiar").addEventListener("click", async function () {
+    if (!ultimoPuntaje) return;
+    var lineas = DIMENSIONES.map(function (d, k) {
+      return d.nombre + ": " + formato(ultimoPuntaje[k]) + " de 5";
+    });
+    var texto = "Mi perfil de liderazgo (¿Cómo lidero hoy?)\n" + lineas.join("\n");
+    try {
+      await navigator.clipboard.writeText(texto);
+      nodo("toast").textContent = "Resultado copiado. Pégalo en tu cuaderno o en la plantilla de la Evidencia 1.";
+    } catch (e) {
+      nodo("toast").textContent = "No se pudo copiar. Toma una captura de pantalla de tu radar.";
+    }
+  });
+
+  if (cargar()) {
+    nodo("retomar").hidden = false;
+  }
+})();
+</script>
+</body>
+</html>
